@@ -798,6 +798,522 @@
                     }
                 }
             }
+        }, {
+            name: 'Pisang Kepok',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam bonggol atau anakan.'
+            }, {
+                day: 30,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk organik dan NPK.'
+            }, {
+                day: 90,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK seimbang.'
+            }, {
+                day: 120,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Fusarium.'
+            }, {
+                day: 180,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium saat mulai berbuah.'
+            }, {
+                day: 270,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen setelah buah muncul.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'Organik, NPK',
+                    dose: '0.5 kg pupuk per pohon',
+                    purpose: 'Mempercepat pertumbuhan anakan'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'NPK (15-15-15)',
+                    dose: '1-2 kg per pohon',
+                    purpose: 'Memperkuat batang dan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'Kalium Sulfat',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan kualitas dan rasa buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Fusarium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning dari tepi, layu, batang pecah.',
+                        organic_control: 'Rotasi tanaman, gunakan varietas tahan.',
+                        chemical_control: 'Fungisida sistemik.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Raja',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam bibit dari kultur jaringan.'
+            }, {
+                day: 40,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk organik dan Urea.'
+            }, {
+                day: 100,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK (16-16-16).'
+            }, {
+                day: 150,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Fusarium dan Penyakit Moko.'
+            }, {
+                day: 200,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium.'
+            }, {
+                day: 300,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'Organik, Urea',
+                    dose: '0.5-1 kg per pohon',
+                    purpose: 'Mempercepat pertumbuhan anakan'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'NPK',
+                    dose: '1-2 kg per pohon',
+                    purpose: 'Memperkuat batang dan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan bobot dan rasa buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Fusarium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning, layu, batang pecah.',
+                        organic_control: 'Rotasi tanaman, gunakan varietas tahan.',
+                        chemical_control: 'Fungisida sistemik.'
+                    },
+                    'Penyakit Moko': {
+                        category: 'Bakteri',
+                        symptom: 'Daun layu, buah membusuk dari dalam.',
+                        organic_control: 'Cabut & bakar tanaman terinfeksi.',
+                        chemical_control: 'Bakterisida.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Ambon',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam bonggol atau anakan.'
+            }, {
+                day: 30,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK dan Urea.'
+            }, {
+                day: 90,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK seimbang.'
+            }, {
+                day: 140,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Penyakit Bercak Daun Sigatoka.'
+            }, {
+                day: 180,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium.'
+            }, {
+                day: 250,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'NPK, Urea',
+                    dose: '0.5 kg per pohon',
+                    purpose: 'Memacu pertumbuhan vegetatif'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'NPK (15-15-15)',
+                    dose: '1-2 kg per pohon',
+                    purpose: 'Memperkuat batang dan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KNO3',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan kualitas buah'
+                },
+                'Serangan Penyakit': {
+                    'Penyakit Bercak Daun Sigatoka': {
+                        category: 'Jamur',
+                        symptom: 'Bercak oval kecil pada daun yang berubah menjadi hitam.',
+                        organic_control: 'Sanitasi kebun, pangkas daun terinfeksi.',
+                        chemical_control: 'Fungisida berbahan aktif mankozeb.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Cavendish',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam bibit dari kultur jaringan.'
+            }, {
+                day: 45,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK.'
+            }, {
+                day: 150,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Penyakit Bercak Daun Sigatoka.'
+            }, {
+                day: 200,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium dan Fosfor.'
+            }, {
+                day: 270,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'NPK (15-15-15)',
+                    dose: '1-2 kg per pohon',
+                    purpose: 'Meningkatkan pertumbuhan vegetatif'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL, TSP',
+                    dose: '1.5 kg per pohon',
+                    purpose: 'Meningkatkan ukuran dan bobot buah'
+                },
+                'Serangan Penyakit': {
+                    'Penyakit Bercak Daun Sigatoka': {
+                        category: 'Jamur',
+                        symptom: 'Bercak oval kecil pada daun yang berubah menjadi hitam.',
+                        organic_control: 'Sanitasi kebun, pangkas daun terinfeksi.',
+                        chemical_control: 'Fungisida berbahan aktif mankozeb.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Tanduk',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam anakan yang sehat.'
+            }, {
+                day: 60,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK.'
+            }, {
+                day: 180,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium.'
+            }, {
+                day: 240,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Fusarium.'
+            }, {
+                day: 360,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'NPK',
+                    dose: '1-2 kg per pohon',
+                    purpose: 'Mempercepat pertumbuhan'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KNO3',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan bobot dan ukuran buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Fusarium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning dari tepi, layu.',
+                        organic_control: 'Rotasi tanaman, gunakan varietas tahan.',
+                        chemical_control: 'Fungisida sistemik.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Mas',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam anakan.'
+            }, {
+                day: 30,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK.'
+            }, {
+                day: 60,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium.'
+            }, {
+                day: 80,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Penyakit Moko.'
+            }, {
+                day: 120,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'NPK',
+                    dose: '0.5 kg per pohon',
+                    purpose: 'Mendorong pertumbuhan anakan'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL',
+                    dose: '0.5 kg per pohon',
+                    purpose: 'Meningkatkan rasa manis buah'
+                },
+                'Serangan Penyakit': {
+                    'Penyakit Moko': {
+                        category: 'Bakteri',
+                        symptom: 'Daun layu, buah membusuk dari dalam.',
+                        organic_control: 'Cabut & bakar tanaman terinfeksi.',
+                        chemical_control: 'Bakterisida.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Barangan',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam anakan.'
+            }, {
+                day: 30,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK.'
+            }, {
+                day: 100,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium dan Fosfor.'
+            }, {
+                day: 150,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Fusarium.'
+            }, {
+                day: 250,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'NPK',
+                    dose: '1 kg per pohon',
+                    purpose: 'Mempercepat pertumbuhan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KNO3, TSP',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan kualitas buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Fusarium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning dari tepi, layu.',
+                        organic_control: 'Rotasi tanaman, gunakan varietas tahan.',
+                        chemical_control: 'Fungisida sistemik.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Uli',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam anakan atau bonggol.'
+            }, {
+                day: 25,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK dan pupuk organik.'
+            }, {
+                day: 80,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium.'
+            }, {
+                day: 100,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Penyakit Bercak Daun Sigatoka.'
+            }, {
+                day: 200,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'NPK, Organik',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan pertumbuhan dan ketahanan'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL',
+                    dose: '0.75 kg per pohon',
+                    purpose: 'Mempercepat pematangan buah'
+                },
+                'Serangan Penyakit': {
+                    'Penyakit Bercak Daun Sigatoka': {
+                        category: 'Jamur',
+                        symptom: 'Bercak oval kecil pada daun yang berubah menjadi hitam.',
+                        organic_control: 'Sanitasi kebun, pangkas daun terinfeksi.',
+                        chemical_control: 'Fungisida berbahan aktif mankozeb.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Susu',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam anakan.'
+            }, {
+                day: 35,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk NPK.'
+            }, {
+                day: 70,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Penyakit Moko.'
+            }, {
+                day: 120,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium dan Boron.'
+            }, {
+                day: 220,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'NPK',
+                    dose: '1 kg per pohon',
+                    purpose: 'Mendorong pertumbuhan daun dan batang'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL, Boron',
+                    dose: '0.75 kg per pohon',
+                    purpose: 'Meningkatkan rasa dan kualitas buah'
+                },
+                'Serangan Penyakit': {
+                    'Penyakit Moko': {
+                        category: 'Bakteri',
+                        symptom: 'Daun layu, buah membusuk dari dalam.',
+                        organic_control: 'Cabut & bakar tanaman terinfeksi.',
+                        chemical_control: 'Bakterisida.'
+                    }
+                }
+            }
+        }, {
+            name: 'Pisang Nangka',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Tanam anakan.'
+            }, {
+                day: 40,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk organik dan NPK.'
+            }, {
+                day: 100,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan pupuk Kalium.'
+            }, {
+                day: 160,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Fusarium.'
+            }, {
+                day: 280,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'Organik, NPK',
+                    dose: '1.5 kg per pohon',
+                    purpose: 'Meningkatkan pertumbuhan anakan'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KNO3',
+                    dose: '1 kg per pohon',
+                    purpose: 'Meningkatkan bobot dan rasa buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Fusarium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning dari tepi, layu.',
+                        organic_control: 'Rotasi tanaman, gunakan varietas tahan.',
+                        chemical_control: 'Fungisida sistemik.'
+                    }
+                }
+            }
         }];
 
         // Mendapatkan elemen
