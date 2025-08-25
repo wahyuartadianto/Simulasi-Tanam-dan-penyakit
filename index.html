@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Siklus Tanam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Custom styles for the timeline */
+        
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #d1d5db;
+            /* Gray-300 */
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background-color: #4b5563;
+            /* Gray-700 */
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+    </style>
+</head>
+
+<body class="p-4 bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-3xl shadow-lg w-full max-w-lg space-y-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800">Simulasi Siklus Tanam</h1>
+        <p class="text-center text-gray-600">Pilih jenis tanaman untuk melihat alur waktu lengkap.</p>
+
+        <!-- Pilihan Utama: Jenis Tanaman -->
+        <div class="space-y-2">
+            <label for="plant-select" class="block text-gray-700 font-medium">Jenis Tanaman:</label>
+            <select id="plant-select" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200">
+                <option value="">-- Pilih Tanaman --</option>
+            </select>
+        </div>
+
+        <!-- Tampilan Timeline -->
+        <div id="timeline-section" class="space-y-4 pt-4 hidden">
+            <h2 class="text-2xl font-semibold text-gray-700 border-b-2 pb-2">Timeline Siklus Tanam</h2>
+            <div class="timeline" id="timeline-container">
+                <!-- Timeline items will be injected here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Detail Pemupukan & Penyakit -->
+        <div id="details-section" class="space-y-4 pt-4 hidden">
+            <h2 class="text-2xl font-semibold text-gray-700 border-b-2 pb-2">Detail Rekomendasi</h2>
+            <div id="details-container" class="space-y-4">
+                <!-- Details will be injected here by JavaScript -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Data terintegrasi dengan informasi timeline
+        const allPlantData = [{
+            name: 'Padi',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam bibit.'
+            }, {
+                day: 7,
+                event: 'Pupuk Tanam',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk Kandang untuk nutrisi awal.'
+            }, {
+                day: 10,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea dan SP-36.'
+            }, {
+                day: 15,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Penyakit Tungro dan Kresek.'
+            }, {
+                day: 45,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK dan KCL untuk mengisi bulir.'
+            }, {
+                day: 60,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Busuk Leher Padi.'
+            }, {
+                day: 120,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Tanam': {
+                    fertilizer: 'Pupuk Kandang',
+                    dose: '1-2 ton/ha',
+                    purpose: 'Memperbaiki struktur tanah & menyediakan nutrisi awal'
+                },
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'Urea, SP-36',
+                    dose: 'Urea 100 kg/ha, SP-36 50 kg/ha',
+                    purpose: 'Mendorong anakan & pertumbuhan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'NPK, KCL',
+                    dose: 'NPK 100 kg/ha, KCL 50 kg/ha',
+                    purpose: 'Mengisi bulir, meningkatkan bobot gabah'
+                },
+                'Serangan Penyakit': {
+                    'Penyakit Tungro': {
+                        category: 'Virus',
+                        symptom: 'Daun menguning, pertumbuhan kerdil.',
+                        organic_control: 'Kendalikan wereng hijau.',
+                        chemical_control: 'Semprot insektisida.'
+                    },
+                    'Kresek': {
+                        category: 'Bakteri',
+                        symptom: 'Bercak memanjang di tepi daun.',
+                        organic_control: 'Kurangi dosis pupuk N.',
+                        chemical_control: 'Bakterisida streptomisin sulfat.'
+                    },
+                    'Busuk Leher Padi': {
+                        category: 'Jamur',
+                        symptom: 'Leher malai membusuk, patah.',
+                        organic_control: 'Kurangi dosis N.',
+                        chemical_control: 'Fungisida metil tiofanat.'
+                    }
+                }
+            }
+        }, {
+            name: 'Jagung',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam biji.'
+            }, {
+                day: 5,
+                event: 'Pupuk Tanam',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk Kandang dan TSP.'
+            }, {
+                day: 15,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea dan NPK.'
+            }, {
+                day: 30,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Karat Daun dan Bercak Daun.'
+            }, {
+                day: 50,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK saat pembungaan.'
+            }, {
+                day: 100,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Tanam': {
+                    fertilizer: 'Pupuk Kandang, TSP',
+                    dose: '1.5 ton/ha, TSP 50 kg/ha',
+                    purpose: 'Menyediakan fosfor untuk perakaran kuat'
+                },
+                'Pupuk Vegetatif': {
+                    fertilizer: 'Urea, NPK',
+                    dose: 'Urea 150 kg/ha',
+                    purpose: 'Mendorong pertumbuhan batang & daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'NPK',
+                    dose: 'NPK 100 kg/ha',
+                    purpose: 'Meningkatkan ukuran dan kualitas tongkol'
+                },
+                'Serangan Penyakit': {
+                    'Karat Daun': {
+                        category: 'Jamur',
+                        symptom: 'Bintik oranye pada daun.',
+                        organic_control: 'Kurangi kelembaban.',
+                        chemical_control: 'Fungisida mankozeb.'
+                    },
+                    'Bercak Daun': {
+                        category: 'Jamur',
+                        symptom: 'Bercak coklat kecil-kecil pada daun.',
+                        organic_control: 'Sanitasi sisa tanaman.',
+                        chemical_control: 'Fungisida mankozeb.'
+                    }
+                }
+            }
+        }, {
+            name: 'Cabai',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam bibit.'
+            }, {
+                day: 10,
+                event: 'Pupuk Tanam',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk Organik Cair.'
+            }, {
+                day: 14,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK (16-16-16).'
+            }, {
+                day: 20,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Bakteri, Mosaik Kuning, dan Keriting Daun.'
+            }, {
+                day: 28,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK (16-16-16).'
+            }, {
+                day: 42,
+                event: 'Pupuk Vegetatif 3',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK (16-16-16).'
+            }, {
+                day: 50,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan KNO3 saat mulai berbunga.'
+            }, {
+                day: 60,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Busuk Batang dan Antraknosa.'
+            }, {
+                day: 150,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Tanam': {
+                    fertilizer: 'Pupuk Organik Cair',
+                    dose: '50-100 ml/10 liter air',
+                    purpose: 'Memperkaya mikroorganisme & nutrisi awal'
+                },
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'NPK (16-16-16)',
+                    dose: 'Dosis 100 kg/ha, dibagi 3x',
+                    purpose: 'Memacu pertumbuhan vegetatif'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'NPK (16-16-16)',
+                    dose: 'Dosis 100 kg/ha, dibagi 3x',
+                    purpose: 'Memacu pertumbuhan vegetatif'
+                },
+                'Pupuk Vegetatif 3': {
+                    fertilizer: 'NPK (16-16-16)',
+                    dose: 'Dosis 100 kg/ha, dibagi 3x',
+                    purpose: 'Memacu pertumbuhan vegetatif'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KNO3',
+                    dose: '50 kg/ha, dosis dibagi 2x',
+                    purpose: 'Mencegah kerontokan bunga & buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Bakteri': {
+                        category: 'Bakteri',
+                        symptom: 'Layu tiba-tiba, batang berlendir.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Bakterisida tembaga.'
+                    },
+                    'Mosaik Kuning': {
+                        category: 'Virus',
+                        symptom: 'Daun menguning, pertumbuhan kerdil.',
+                        organic_control: 'Kendalikan kutu kebul.',
+                        chemical_control: 'Insektisida untuk kutu kebul.'
+                    },
+                    'Keriting Daun': {
+                        category: 'Virus',
+                        symptom: 'Daun mengecil, mengeriting.',
+                        organic_control: 'Kendalikan kutu kebul dan trips.',
+                        chemical_control: 'Insektisida untuk hama vektor.'
+                    },
+                    'Busuk Batang': {
+                        category: 'Jamur',
+                        symptom: 'Batang busuk & layu.',
+                        organic_control: 'Sanitasi lahan.',
+                        chemical_control: 'Fungisida benomil.'
+                    },
+                    'Antraknosa (Patek)': {
+                        category: 'Jamur',
+                        symptom: 'Bercak cekung coklat pada buah.',
+                        organic_control: 'Sanitasi kebun.',
+                        chemical_control: 'Fungisida propikonazol.'
+                    }
+                }
+            }
+        }, {
+            name: 'Tomat',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam bibit.'
+            }, {
+                day: 10,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk NPK.'
+            }, {
+                day: 20,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Bakteri, Layu Fusarium, dan Keriting Daun.'
+            }, {
+                day: 25,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk NPK.'
+            }, {
+                day: 40,
+                event: 'Pupuk Vegetatif 3',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk NPK.'
+            }, {
+                day: 50,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk Kalium Tinggi.'
+            }, {
+                day: 80,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'Pupuk NPK',
+                    dose: '150 kg/ha, dosis dibagi 3x',
+                    purpose: 'Memperkuat batang & percabangan'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'Pupuk NPK',
+                    dose: '150 kg/ha, dosis dibagi 3x',
+                    purpose: 'Memperkuat batang & percabangan'
+                },
+                'Pupuk Vegetatif 3': {
+                    fertilizer: 'Pupuk NPK',
+                    dose: '150 kg/ha, dosis dibagi 3x',
+                    purpose: 'Memperkuat batang & percabangan'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'Pupuk Kalium Tinggi',
+                    dose: '75 kg/ha, dosis dibagi 2x',
+                    purpose: 'Meningkatkan rasa & warna buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Bakteri': {
+                        category: 'Bakteri',
+                        symptom: 'Layu tiba-tiba, batang berlendir.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Bakterisida tembaga.'
+                    },
+                    'Layu Fusarium': {
+                        category: 'Jamur',
+                        symptom: 'Tanaman layu perlahan.',
+                        organic_control: 'Rotasi tanaman, varietas tahan.',
+                        chemical_control: 'Fungisida sistemik.'
+                    },
+                    'Keriting Daun': {
+                        category: 'Virus',
+                        symptom: 'Daun mengecil, mengeriting.',
+                        organic_control: 'Kendalikan hama kutu kebul.',
+                        chemical_control: 'Insektisida untuk hama vektor.'
+                    },
+                    'Layu Verticillium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning dan layu satu sisi.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Fungisida benomil.'
+                    }
+                }
+            }
+        }, {
+            name: 'Bawang Merah',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam umbi.'
+            }, {
+                day: 10,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea dan NPK.'
+            }, {
+                day: 20,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea dan NPK.'
+            }, {
+                day: 25,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Karat Daun dan Bercak Daun.'
+            }, {
+                day: 30,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan KCL dan KNO3.'
+            }, {
+                day: 60,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'Urea, NPK',
+                    dose: 'Urea 100 kg/ha (umur 10 hari)',
+                    purpose: 'Mendorong pertumbuhan daun'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'Urea, NPK',
+                    dose: 'Urea 100 kg/ha (umur 20 hari)',
+                    purpose: 'Mendorong pertumbuhan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL, KNO3',
+                    dose: 'KCL 50 kg/ha (umur 30 hari)',
+                    purpose: 'Memperbesar umbi & meningkatkan bobot'
+                },
+                'Serangan Penyakit': {
+                    'Karat Daun': {
+                        category: 'Jamur',
+                        symptom: 'Bintik oranye seperti karat pada daun.',
+                        organic_control: 'Kurangi kelembaban.',
+                        chemical_control: 'Fungisida mankozeb.'
+                    },
+                    'Bercak Daun': {
+                        category: 'Jamur',
+                        symptom: 'Bercak coklat kecil-kecil pada daun.',
+                        organic_control: 'Varietas tahan.',
+                        chemical_control: 'Fungisida mankozeb.'
+                    },
+                    'Busuk Umbi': {
+                        category: 'Jamur',
+                        symptom: 'Umbi membusuk & berbau tidak sedap.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Fungisida metalaksil.'
+                    }
+                }
+            }
+        }, {
+            name: 'Mentimun',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam biji.'
+            }, {
+                day: 10,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK (15-15-15).'
+            }, {
+                day: 15,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Mosaik Kuning.'
+            }, {
+                day: 20,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK (15-15-15).'
+            }, {
+                day: 40,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan Pupuk Kalium.'
+            }, {
+                day: 45,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Embun Tepung.'
+            }, {
+                day: 60,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'NPK (15-15-15)',
+                    dose: '100 kg/ha, dosis dibagi 2x',
+                    purpose: 'Memacu pertumbuhan sulur & daun'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'NPK (15-15-15)',
+                    dose: '100 kg/ha, dosis dibagi 2x',
+                    purpose: 'Memacu pertumbuhan sulur & daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'Pupuk Kalium',
+                    dose: '75 kg/ha, dosis dibagi 2x',
+                    purpose: 'Meningkatkan kualitas & kuantitas buah'
+                },
+                'Serangan Penyakit': {
+                    'Mosaik Kuning': {
+                        category: 'Virus',
+                        symptom: 'Daun menguning, pola mozaik.',
+                        organic_control: 'Kendalikan kutu kebul.',
+                        chemical_control: 'Insektisida untuk kutu kebul.'
+                    },
+                    'Embun Tepung': {
+                        category: 'Jamur',
+                        symptom: 'Lapisan tepung putih pada daun.',
+                        organic_control: 'Semprotan larutan baking soda.',
+                        chemical_control: 'Fungisida sulfur.'
+                    }
+                }
+            }
+        }, {
+            name: 'Terong',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam bibit.'
+            }, {
+                day: 10,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK.'
+            }, {
+                day: 20,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Layu Bakteri, Layu Verticillium.'
+            }, {
+                day: 25,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK.'
+            }, {
+                day: 40,
+                event: 'Pupuk Vegetatif 3',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK.'
+            }, {
+                day: 50,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan KNO3.'
+            }, {
+                day: 60,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Busuk Batang, Embun Tepung.'
+            }, {
+                day: 100,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'NPK',
+                    dose: '120 kg/ha, dosis dibagi 3x',
+                    purpose: 'Mendorong pertumbuhan batang & daun'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'NPK',
+                    dose: '120 kg/ha, dosis dibagi 3x',
+                    purpose: 'Mendorong pertumbuhan batang & daun'
+                },
+                'Pupuk Vegetatif 3': {
+                    fertilizer: 'NPK',
+                    dose: '120 kg/ha, dosis dibagi 3x',
+                    purpose: 'Mendorong pertumbuhan batang & daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KNO3',
+                    dose: '60 kg/ha, dosis dibagi 2x',
+                    purpose: 'Mencegah kerontokan bunga & buah'
+                },
+                'Serangan Penyakit': {
+                    'Layu Bakteri': {
+                        category: 'Bakteri',
+                        symptom: 'Layu tiba-tiba, batang berlendir.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Bakterisida tembaga.'
+                    },
+                    'Layu Verticillium': {
+                        category: 'Jamur',
+                        symptom: 'Daun menguning dan layu satu sisi.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Fungisida benomil.'
+                    },
+                    'Busuk Batang': {
+                        category: 'Jamur',
+                        symptom: 'Batang busuk & layu.',
+                        organic_control: 'Sanitasi lahan.',
+                        chemical_control: 'Fungisida benomil.'
+                    },
+                    'Embun Tepung': {
+                        category: 'Jamur',
+                        symptom: 'Lapisan tepung putih pada daun.',
+                        organic_control: 'Semprotan baking soda.',
+                        chemical_control: 'Fungisida sulfur.'
+                    }
+                }
+            }
+        }, {
+            name: 'Kacang Panjang',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam biji.'
+            }, {
+                day: 15,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea.'
+            }, {
+                day: 40,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK dan KCL.'
+            }, {
+                day: 45,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Antraknosa.'
+            }, {
+                day: 60,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'Urea',
+                    dose: '100 kg/ha',
+                    purpose: 'Mendorong pertumbuhan vegetatif'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'NPK, KCL',
+                    dose: '75 kg/ha',
+                    purpose: 'Meningkatkan produktivitas polong'
+                },
+                'Serangan Penyakit': {
+                    'Antraknosa': {
+                        category: 'Jamur',
+                        symptom: 'Bercak cekung coklat pada polong.',
+                        organic_control: 'Sanitasi kebun.',
+                        chemical_control: 'Fungisida propikonazol.'
+                    }
+                }
+            }
+        }, {
+            name: 'Singkong',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam stek.'
+            }, {
+                day: 30,
+                event: 'Pupuk Vegetatif 1',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea.'
+            }, {
+                day: 60,
+                event: 'Pupuk Vegetatif 2',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea.'
+            }, {
+                day: 90,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan KCL.'
+            }, {
+                day: 120,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Busuk Umbi.'
+            }, {
+                day: 180,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif 1': {
+                    fertilizer: 'Urea',
+                    dose: '150 kg/ha',
+                    purpose: 'Mendorong pertumbuhan batang & daun'
+                },
+                'Pupuk Vegetatif 2': {
+                    fertilizer: 'Urea',
+                    dose: '150 kg/ha',
+                    purpose: 'Mendorong pertumbuhan batang & daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'KCL',
+                    dose: '100 kg/ha',
+                    purpose: 'Meningkatkan bobot & kualitas umbi'
+                },
+                'Serangan Penyakit': {
+                    'Busuk Umbi': {
+                        category: 'Jamur',
+                        symptom: 'Umbi membusuk & berbau.',
+                        organic_control: 'Rotasi tanaman.',
+                        chemical_control: 'Fungisida metalaksil.'
+                    }
+                }
+            }
+        }, {
+            name: 'Wortel',
+            timeline: [{
+                day: 0,
+                event: 'Tanam',
+                type: 'Tanam',
+                description: 'Mulai tanam biji.'
+            }, {
+                day: 15,
+                event: 'Pupuk Vegetatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan Urea dan NPK.'
+            }, {
+                day: 30,
+                event: 'Pupuk Generatif',
+                type: 'Pupuk',
+                description: 'Aplikasikan NPK.'
+            }, {
+                day: 50,
+                event: 'Serangan Penyakit',
+                type: 'Penyakit',
+                description: 'Waspada Busuk Lunak.'
+            }, {
+                day: 90,
+                event: 'Panen',
+                type: 'Panen',
+                description: 'Masa panen.'
+            }],
+            details: {
+                'Pupuk Vegetatif': {
+                    fertilizer: 'Urea, NPK',
+                    dose: 'Urea 50 kg/ha',
+                    purpose: 'Mendorong pertumbuhan daun'
+                },
+                'Pupuk Generatif': {
+                    fertilizer: 'NPK',
+                    dose: '100 kg/ha',
+                    purpose: 'Memperbesar ukuran umbi'
+                },
+                'Serangan Penyakit': {
+                    'Busuk Lunak': {
+                        category: 'Bakteri',
+                        symptom: 'Bagian umbi/buah menjadi lunak, basah.',
+                        organic_control: 'Panen saat cuaca cerah.',
+                        chemical_control: 'Bakterisida tembaga.'
+                    }
+                }
+            }
+        }];
+
+        // Mendapatkan elemen
+        const plantSelect = document.getElementById('plant-select');
+        const timelineSection = document.getElementById('timeline-section');
+        const timelineContainer = document.getElementById('timeline-container');
+        const detailsSection = document.getElementById('details-section');
+        const detailsContainer = document.getElementById('details-container');
+
+        // Mengisi dropdown jenis tanaman
+        document.addEventListener('DOMContentLoaded', () => {
+            allPlantData.forEach(plant => {
+                const option = document.createElement('option');
+                option.value = plant.name;
+                option.textContent = plant.name;
+                plantSelect.appendChild(option);
+            });
+        });
+
+        // Event listener untuk pilihan tanaman
+        plantSelect.addEventListener('change', () => {
+                    const selectedPlantName = plantSelect.value;
+                    const selectedPlantData = allPlantData.find(plant => plant.name === selectedPlantName);
+
+                    // Reset dan sembunyikan semua elemen terkait hasil
+                    timelineSection.classList.add('hidden');
+                    detailsSection.classList.add('hidden');
+                    timelineContainer.innerHTML = '';
+                    detailsContainer.innerHTML = '';
+
+                    if (selectedPlantData) {
+                        timelineSection.classList.remove('hidden');
+
+                        // Urutkan timeline berdasarkan hari
+                        const sortedTimeline = [...selectedPlantData.timeline].sort((a, b) => a.day - b.day);
+
+                        // Tampilkan timeline
+                        sortedTimeline.forEach(item => {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.classList.add('timeline-item', 'pl-4');
+                            let iconColor = 'text-gray-700';
+                            let headingColor = 'text-gray-700';
+                            if (item.type === 'Pupuk') {
+                                iconColor = 'text-green-500';
+                                headingColor = 'text-green-700';
+                            } else if (item.type === 'Penyakit') {
+                                iconColor = 'text-red-500';
+                                headingColor = 'text-red-700';
+                            } else if (item.type === 'Panen') {
+                                iconColor = 'text-yellow-500';
+                                headingColor = 'text-yellow-700';
+                            }
+
+                            itemDiv.innerHTML = `
+                        <p class="font-bold text-lg ${headingColor}">Hari ke-${item.day}: ${item.event}</p>
+                        <p class="text-sm text-gray-600">${item.description}</p>
+                    `;
+                            timelineContainer.appendChild(itemDiv);
+                        });
+
+                        // Tampilkan detail pupuk dan penyakit
+                        detailsSection.classList.remove('hidden');
+
+                        const timelineDetails = selectedPlantData.details;
+                        const pupukHtml = `
+                    <h3 class="font-semibold text-lg text-green-700 mb-2">Detail Pemupukan</h3>
+                    ${Object.entries(timelineDetails).filter(([key]) => key.includes('Pupuk')).map(([key, value]) => `
+                        <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-700">${key}</h4>
+                            <p class="text-sm"><span class="font-semibold">Jenis Pupuk:</span> ${value.fertilizer}</p>
+                            <p class="text-sm"><span class="font-semibold">Dosis:</span> ${value.dose}</p>
+                            <p class="text-sm"><span class="font-semibold">Tujuan:</span> ${value.purpose}</p>
+                        </div>
+                    `).join('')}
+                `;
+
+                const penyakitHtml = `
+                    <h3 class="font-semibold text-lg text-red-700 mb-2 mt-4">Detail Penyakit</h3>
+                    ${Object.entries(timelineDetails).filter(([key]) => key === 'Serangan Penyakit').map(([key, value]) => `
+                        ${Object.entries(value).map(([diseaseName, diseaseData]) => `
+                            <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                                <h4 class="font-bold text-red-700">${diseaseName} <span class="text-xs text-gray-500">(${diseaseData.category})</span></h4>
+                                <p class="text-sm"><span class="font-semibold">Ciri-ciri:</span> ${diseaseData.symptom}</p>
+                                <p class="text-sm"><span class="font-semibold">Pengendalian Organik:</span> ${diseaseData.organic_control}</p>
+                                <p class="text-sm"><span class="font-semibold">Pengendalian Kimiawi:</span> ${diseaseData.chemical_control}</p>
+                            </div>
+                        `).join('')}
+                    `).join('')}
+                `;
+                
+                detailsContainer.innerHTML = pupukHtml + penyakitHtml;
+            }
+        });
+    </script>
+</body>
+
+</html>
